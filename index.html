@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dla Ciebie Kochanie 💖</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    text-align: center;
+}
+
+/* KARTA */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 420px;
+    margin: 20px auto;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+h1 { 
+    color: #e91e63;
+    font-size: 22px;
+}
+
+h2 {
+    font-size: 18px;
+}
+
+p {
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+/* PRZYCISKI */
+button {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    background: #e91e63;
+    color: white;
+    margin-top: 10px;
+}
+
+.answers button {
+    background: #f06292;
+}
+
+.selected {
+    background: #880e4f !important;
+}
+
+.hidden { display: none; }
+
+/* SERDUSZKA */
+.heart {
+    position: fixed;
+    bottom: -20px;
+    color: red;
+    animation: floatUp 6s linear infinite;
+}
+
+@keyframes floatUp {
+    0% {transform: translateY(0); opacity:1;}
+    100% {transform: translateY(-100vh); opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+    <source src="muzyka.mp3" type="audio/mpeg">
+</audio>
+
+<!-- START -->
+<div class="card" id="start">
+    <h1>🎉 Wszystkiego najlepszego Kochanie! 🎉</h1>
+    
+    <p>
+        Z okazji Twoich 25 urodzin chciałbym Ci życzyć wszystkiego, co najpiękniejsze ❤️  
+        Niech każdy dzień przynosi Ci uśmiech, spokój i spełnienie marzeń.
+    </p>
+
+    <p>
+        Dziękuję Ci za to, że jesteś przy mnie, za wszystkie chwile — te piękne i te trudniejsze.  
+        Za śmiech, za wsparcie, za to, że po prostu jesteś sobą ❤️
+    </p>
+
+    <p>
+        Jesteś dla mnie najważniejszą osobą i nie wyobrażam sobie życia bez Ciebie.  
+        Kocham Cię najbardziej na świecie 💖
+    </p>
+
+    <p>
+        Przygotowałem dla Ciebie małą zabawę... 😏  
+        Rozwiąż quiz i odbierz swój prezent 🎁
+    </p>
+
+    <button onclick="startQuiz()">Rozpocznij quiz 💝</button>
+</div>
+
+<!-- QUIZ -->
+<div class="card hidden" id="quiz">
+    <h2 id="question"></h2>
+    <div class="answers" id="answers"></div>
+    <p id="liveScore"></p>
+    <button onclick="nextQuestion()">Dalej ➡️</button>
+</div>
+
+<!-- WYNIK -->
+<div class="card hidden" id="result">
+    <h2>Twój wynik 💖</h2>
+    <p id="score"></p>
+    <p id="message"></p>
+    <button onclick="showGift()">Odbierz prezent 🎁</button>
+</div>
+
+<script>
+const quizData = [
+
+{
+    question: "Jaka jest data rozpoczęcia naszego związku? ❤️",
+    answers: [
+        "26 października 2019",
+        "25 października 2019",
+        "26 listopada 2019",
+        "27 października 2019"
+    ],
+    correct: 0
+},
+
+{
+    question: "W jakim kraju byliśmy pierwszy raz razem za granicą? 🌍",
+    answers: [
+        "Chorwacja",
+        "Włochy",
+        "Hiszpania",
+        "Grecja"
+    ],
+    correct: 0
+},
+
+{
+    question: "Ile razy byliśmy w Suntago? 🌊",
+    answers: [
+        "1",
+        "2",
+        "3",
+        "4"
+    ],
+    correct: 1
+},
+
+{
+    question: "Co zamówiłaś na naszej pierwszej randce w McDonald's? 🍔",
+    answers: [
+        "Nuggetsy",
+        "Big Mac",
+        "McChicken",
+        "Frytki i lody"
+    ],
+    correct: 0
+},
+
+{
+    question: "Jaki był pierwszy samochód Marcisia? 🚗",
+    answers: [
+        "Renault Megane",
+        "Volkswagen Passat",
+        "BMW Seria 3",
+        "Audi A4"
+    ],
+    correct: 0
+},
+
+{
+    question: "Kto bardziej kocha drugą osobę? 😏❤️",
+    answers: [
+        "Ja 😄",
+        "Ty 😄",
+        "Oboje tak samo ❤️",
+        "To się nie da zmierzyć 😜"
+    ],
+    correct: 2
+},
+
+{
+    question: "Co poprawia mi humor, gdy mam gorszy dzień? ❤️",
+    answers: [
+        "Szczęśliwa kubinka",
+        "Czekolada",
+        "Sen",
+        "Muzyka"
+    ],
+    correct: 0
+},
+
+{
+    question: "Kto częściej się spóźnia? 😅",
+    answers: [
+        "Marcin",
+        "Ty",
+        "Oboje",
+        "Nikt"
+    ],
+    correct: 0
+},
+
+{
+    question: "Czego najbardziej nie lubię robić? 😄",
+    answers: [
+        "Za dużo gadać",
+        "Sprzątać",
+        "Wstawać wcześnie",
+        "Gotować"
+    ],
+    correct: 0
+},
+
+{
+    question: "Który nasz wspólny wyjazd był najlepszy? 🌍",
+    answers: [
+        "Teneryfa",
+        "Grecja",
+        "Hiszpania",
+        "Wyjazd w Polsce ❤️"
+    ],
+    correct: 0
+}
+
+];
+
+let currentQuestion = 0;
+let score = 0;
+let selected = null;
+
+function startQuiz() {
+    document.getElementById("start").classList.add("hidden");
+    document.getElementById("quiz").classList.remove("hidden");
+    document.getElementById("music").play();
+    loadQuestion();
+}
+
+function loadQuestion() {
+    selected = null;
+    const q = quizData[currentQuestion];
+
+    document.getElementById("question").innerText = q.question;
+    document.getElementById("liveScore").innerText =
+        "Punkty: " + score + " / " + quizData.length;
+
+    const answersDiv = document.getElementById("answers");
+    answersDiv.innerHTML = "";
+
+    q.answers.forEach((answer, index) => {
+        const btn = document.createElement("button");
+        btn.innerText = answer;
+        btn.onclick = () => selectAnswer(index, btn);
+        answersDiv.appendChild(btn);
+    });
+}
+
+function selectAnswer(index, btn) {
+    selected = index;
+    document.querySelectorAll("#answers button").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+}
+
+function nextQuestion() {
+    if (selected === null) {
+        alert("Wybierz odpowiedź 😄");
+        return;
+    }
+
+    if (selected === quizData[currentQuestion].correct) {
+        score++;
+    }
+
+    currentQuestion++;
+
+    if (currentQuestion < quizData.length) {
+        loadQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult() {
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("result").classList.remove("hidden");
+
+    const percent = (score / quizData.length) * 100;
+
+    document.getElementById("score").innerText =
+        score + " / " + quizData.length + " (" + percent.toFixed(0) + "%)";
+
+    document.getElementById("message").innerText =
+        percent >= 80
+        ? "🔥 WOW! Perfekcyjnie! Zasłużony prezent!"
+        : "❤️ I tak jesteś najlepsza — nagroda pocieszenia!";
+}
+
+function showGift() {
+    window.open("prezent.pdf", "_blank");
+}
+
+/* SERDUSZKA */
+setInterval(() => {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerText = "❤";
+    heart.style.left = Math.random() * 100 + "vw";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+}, 300);
+</script>
+
+</body>
+</html>
